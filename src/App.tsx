@@ -7,42 +7,52 @@ function App() {
     rich: 1,
     truc: 1,
     khoa: 1,
-    "tien anh": 1,
+    tienanh: 1,
   });
+
   type Attendee = keyof typeof attendees;
+
   const [standingAttendee, setStandingAttendee] = useState<Attendee>("khiem");
 
-  const startingMinute = 1;
-  const [secondsLeft, setSecondsLeft] = useState(startingMinute * 60);
+  const STARTING_MINUTE = 1;
+  const [secondsLeft, setSecondsLeft] = useState(STARTING_MINUTE * 60);
 
   useEffect(() => {
-    const timerInterval = setInterval(() => {
-      setSecondsLeft((prev) => {
-        if (prev <= 0) {
-          clearInterval(timerInterval);
-          attendees[standingAttendee]++;
-          console.log(attendees[standingAttendee]);
-          return 0;
-        }
-        return prev - 1;
+    const decrementTime = setInterval(() => {
+      setSecondsLeft((prevSeconds) => {
+        return prevSeconds - 1;
       });
     }, 100);
 
-    return () => clearInterval(timerInterval);
-  }, []);
+    return () => clearInterval(decrementTime);
+  }, [standingAttendee]);
 
-  const displaySecond = secondsLeft % 60;
+  useEffect(() => {
+    if (secondsLeft <= 0) {
+      setAttendees((prev) => ({
+        ...prev,
+        [standingAttendee]: prev[standingAttendee] + 1,
+      }));
+      setSecondsLeft(STARTING_MINUTE * 60);
+    }
+  });
+
   const displayMinute = Math.floor(secondsLeft / 60);
-  const displayTime = `${displayMinute}:${
-    displaySecond === 0 ? "00" : displaySecond <= 9 ? "0" + displaySecond : displaySecond
-  }`;
+  const displaySecond = secondsLeft % 60;
+  const displayTime = `${displayMinute}:${displaySecond.toString().padStart(2, "0")}`;
 
   return (
     <>
       <div>
         <div style={{ display: "flex", gap: "10px" }}>
           {Object.entries(attendees).map(([name, value]) => (
-            <button key={name}>
+            <button
+              key={name}
+              onClick={() => {
+                setStandingAttendee(name as Attendee);
+                setSecondsLeft(STARTING_MINUTE * 60); // reset when switching
+              }}
+            >
               {name}: {value}
             </button>
           ))}
