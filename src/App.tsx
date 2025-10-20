@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
 
-function App() {
+const App = () => {
   const [attendees, setAttendees] = useState({
     khiem: 1,
     rich: 1,
@@ -12,22 +12,24 @@ function App() {
 
   type Attendee = keyof typeof attendees;
 
-  const [standingAttendee, setStandingAttendee] = useState<Attendee>("khiem");
+  const [standingAttendee, setStandingAttendee] = useState<Attendee>();
 
-  const STARTING_MINUTE = 1;
+  const STARTING_MINUTE = 4;
   const [secondsLeft, setSecondsLeft] = useState(STARTING_MINUTE * 60);
 
   useEffect(() => {
     const decrementTime = setInterval(() => {
-      setSecondsLeft((prevSeconds) => {
-        return prevSeconds - 1;
-      });
-    }, 100);
+      setSecondsLeft((prevSeconds) => prevSeconds - 1);
+    }, 1000);
 
     return () => clearInterval(decrementTime);
   }, [standingAttendee]);
 
   useEffect(() => {
+    if (!standingAttendee) {
+      return;
+    }
+
     if (secondsLeft <= 0) {
       setAttendees((prev) => ({
         ...prev,
@@ -50,7 +52,7 @@ function App() {
               key={name}
               onClick={() => {
                 setStandingAttendee(name as Attendee);
-                setSecondsLeft(STARTING_MINUTE * 60); // reset when switching
+                setSecondsLeft(STARTING_MINUTE * 60);
               }}
             >
               {name}: {value}
@@ -58,7 +60,7 @@ function App() {
           ))}
         </div>
         <h3>Countdown timer</h3>
-        <div>At the stand: {standingAttendee}</div>
+        <div>Standing: {standingAttendee ? standingAttendee : 'none'}</div>
         <div>{displayTime}</div>
       </div>
     </>
