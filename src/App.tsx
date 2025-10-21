@@ -10,9 +10,9 @@ const App = () => {
     { name: 'rich', interval: 1 },
   ]);
 
-  type Attendee = keyof typeof attendees;
+  type Attendee = (typeof attendees)[number]["name"];
 
-  const STARTING_MINUTE = 1;
+  const STARTING_MINUTE = 4;
   const [milisecondsLeft, setMilisecondsLeft] = useState(STARTING_MINUTE * 60 * 1000);
 
   const [standingAttendee, setStandingAttendee] = useState<Attendee>();
@@ -35,16 +35,15 @@ const App = () => {
         prev.map((a) => (a.name === standingAttendee ? { name: a.name, interval: a.interval + 1 } : a))
       );
       new Audio('/interval-over.mp3').play();
-      setMilisecondsLeft(STARTING_MINUTE * 60 * 1000);
+      setMilisecondsLeft(Math.floor((STARTING_MINUTE * 60 * 1000) / (attendees.find(a => a.name === standingAttendee)!.interval + 1)));
     }
   });
 
   const displayMinute = Math.floor(milisecondsLeft / 60000);
   const displaySecond = Math.floor((milisecondsLeft % 60000) / 1000);
   const displayMillisecond = milisecondsLeft % 1000;
-  const displayTime = `${displayMinute}:${displaySecond
+  const displayTime = `${displayMinute}:${displaySecond.toString().padStart(2, '0')}:${displayMillisecond
     .toString()
-    .padStart(2, '0')}:${displayMillisecond.toString()
     .slice(0, -1)
     .padStart(2, '0')}`;
 
@@ -67,8 +66,8 @@ const App = () => {
               key={a.name}
               onClick={() => {
                 new Audio('/interval-start.mp3').play();
-                setStandingAttendee(a.name as Attendee);
-                setMilisecondsLeft(STARTING_MINUTE * 60 * 1000);
+                setStandingAttendee(a.name);
+                setMilisecondsLeft(Math.floor((STARTING_MINUTE * 60 * 1000) / a.interval));
               }}
             >
               {a.name}: {a.interval}
