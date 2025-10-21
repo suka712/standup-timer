@@ -13,7 +13,7 @@ const App = () => {
   type Attendee = keyof typeof attendees;
 
   const STARTING_MINUTE = 1;
-  const [timeLeft, setTimeLeft] = useState(STARTING_MINUTE * 60 * 1000);
+  const [milisecondsLeft, setMilisecondsLeft] = useState(STARTING_MINUTE * 60 * 1000);
 
   const [standingAttendee, setStandingAttendee] = useState<Attendee>();
 
@@ -23,27 +23,29 @@ const App = () => {
     }
 
     const decrementTime = setInterval(() => {
-      setTimeLeft((prev) => prev - 10);
+      setMilisecondsLeft((prev) => prev - 10);
     }, 10);
 
     return () => clearInterval(decrementTime);
   }, [standingAttendee]);
 
   useEffect(() => {
-    if (timeLeft <= 0) {
+    if (milisecondsLeft <= 0) {
       setAttendees((prev) =>
         prev.map((a) => (a.name === standingAttendee ? { name: a.name, interval: a.interval + 1 } : a))
       );
       new Audio('/interval-over.mp3').play();
-      setTimeLeft(STARTING_MINUTE * 60 * 1000);
+      setMilisecondsLeft(STARTING_MINUTE * 60 * 1000);
     }
   });
 
-  const displayMinute = Math.floor(timeLeft / 60000);
-  const displaySecond = Math.floor((timeLeft % 60000) / 1000);
-  const displayMillisecond = timeLeft % 1000;
-  const displayTime = `${displayMinute}:${displaySecond.toString().padStart(2, '0')}:${displayMillisecond
-    .toString().slice(0, -1)
+  const displayMinute = Math.floor(milisecondsLeft / 60000);
+  const displaySecond = Math.floor((milisecondsLeft % 60000) / 1000);
+  const displayMillisecond = milisecondsLeft % 1000;
+  const displayTime = `${displayMinute}:${displaySecond
+    .toString()
+    .padStart(2, '0')}:${displayMillisecond.toString()
+    .slice(0, -1)
     .padStart(2, '0')}`;
 
   return (
@@ -56,7 +58,7 @@ const App = () => {
             onClick={() => {
               new Audio('/interval-pause.mp3').play();
               setStandingAttendee(undefined);
-              setTimeLeft(STARTING_MINUTE * 60 * 1000);
+              setMilisecondsLeft(STARTING_MINUTE * 60 * 1000);
             }}
           ></button>
           {[...attendees].map((a) => (
@@ -66,7 +68,7 @@ const App = () => {
               onClick={() => {
                 new Audio('/interval-start.mp3').play();
                 setStandingAttendee(a.name as Attendee);
-                setTimeLeft(STARTING_MINUTE * 60 * 1000);
+                setMilisecondsLeft(STARTING_MINUTE * 60 * 1000);
               }}
             >
               {a.name}: {a.interval}
