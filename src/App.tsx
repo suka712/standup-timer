@@ -10,12 +10,10 @@ const App = () => {
     { name: 'rich', interval: 1 },
   ]);
 
-  type Attendee = (typeof attendees)[number]["name"];
-
   const STARTING_MINUTE = 4;
   const [milisecondsLeft, setMilisecondsLeft] = useState(STARTING_MINUTE * 60 * 1000);
 
-  const [standingAttendee, setStandingAttendee] = useState<Attendee>();
+  const [standingAttendee, setStandingAttendee] = useState<string>();
 
   useEffect(() => {
     if (!standingAttendee) {
