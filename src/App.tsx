@@ -12,11 +12,12 @@ const App = () => {
     { name: 'tienanh', interval: 1 },
     { name: 'rich', interval: 1 },
   ]);
+  const [volumeLevel, setVolumeLevel] = useState(0.6);
   
   return (
     <>
-      <VolumeButton />
-      <Clock attendees={attendees} setAttendees={setAttendees} volumeLevel={1}/>
+      <VolumeButton volumeLevel={volumeLevel} setVolumeLevel={setVolumeLevel}/>
+      <Clock attendees={attendees} setAttendees={setAttendees} volumeLevel={volumeLevel}/>
       <Chart attendees={attendees} />
     </>
   );

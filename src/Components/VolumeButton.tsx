@@ -1,14 +1,19 @@
 import { useState } from "react"
 
-const VolumeButton = () => {
-  const [volumeLevel, setVolumeLevel] = useState(0.6);
+type VolumeButtonProps = {
+  volumeLevel: number;
+  setVolumeLevel: React.Dispatch<React.SetStateAction<number>>;
+}
 
-  // const handleClick = () => {
-  //   set
-  // }
+const VolumeButton = ({volumeLevel, setVolumeLevel}: VolumeButtonProps) => {
+  const handleClick = () => {
+    const newVolumeLevel = volumeLevel + 0.2 <= 1.1 ? volumeLevel + 0.2 : 0;
+    console.log(newVolumeLevel);
+    setVolumeLevel(newVolumeLevel);
+  }
 
   return (
-    <button style={{borderRadius: '50%', width: 40, height: 40}}>
+    <button style={{position: 'fixed', bottom: 30, left: 30, zIndex: 1, borderRadius: '50%', width: 40, height: 40}} onClick={handleClick}>
       {/* No text */}
     </button>
   )

@@ -11,28 +11,29 @@ interface ClockProps {
   volumeLevel: number;
 }
 
-type SoundKey = 'start' | 'over' | 'stop';
+type SoundKey = 'start' | 'over' | 'none';
 
 const Clock = ({ attendees, setAttendees, volumeLevel }: ClockProps) => {
   const audios = useRef({
-    start: new Audio('/interval-start.mp3'),
-    over: new Audio('/interval-over.mp3'),
-    stop: new Audio('/interval-pause.mp3'),
+    start: new Audio('/clock-interval-start.mp3'),
+    none: new Audio('/clock-none.mp3'),
+    over: new Audio('/clock-interval-over.mp3'), // Correct
   });
   const playSound = (soundKey: SoundKey) => {
+    audios.current[soundKey].volume = volumeLevel;
     audios.current[soundKey].play();
   };
 
-  const STARTING_MINUTE = 4;
+  const STARTING_MINUTE = 0.5;
   const [milisecondsLeft, setMilisecondsLeft] = useState(STARTING_MINUTE * 60 * 1000);
 
   const [standingAttendee, setStandingAttendee] = useState<string | undefined>();
 
-  useEffect(() => {
-    if (!standingAttendee) {
-      return;
-    }
+  // Handle setting volume level
 
+  // Decrement miliseconds
+  useEffect(() => {
+    if (!standingAttendee) return;
     const decrementTime = setInterval(() => {
       setMilisecondsLeft((prev) => prev - 10);
     }, 10);
@@ -40,6 +41,7 @@ const Clock = ({ attendees, setAttendees, volumeLevel }: ClockProps) => {
     return () => clearInterval(decrementTime);
   }, [standingAttendee]);
 
+  // Handle time going to 0
   useEffect(() => {
     if (milisecondsLeft <= 0) {
       setAttendees((prev) =>
@@ -54,6 +56,7 @@ const Clock = ({ attendees, setAttendees, volumeLevel }: ClockProps) => {
 
   useEffect(() => {
     Object.values(audios.current).forEach((audio) => {
+      audio.currentTime = 0;
       audio.volume = volumeLevel;
     });
   }, [volumeLevel]);
@@ -74,7 +77,7 @@ const Clock = ({ attendees, setAttendees, volumeLevel }: ClockProps) => {
           <button
             style={standingAttendee === undefined ? { border: '1px solid #747bff' } : {}}
             onClick={() => {
-              playSound('stop');
+              playSound('none');
               setStandingAttendee(undefined);
               setMilisecondsLeft(STARTING_MINUTE * 60 * 1000);
             }}
