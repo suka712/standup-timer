@@ -14,7 +14,7 @@ const App = () => {
   return (
     <>
       <Clock attendees={attendees} setAttendees={setAttendees}/>
-      <Chart />
+      <Chart attendees={attendees}/>
     </>
   );
 };
