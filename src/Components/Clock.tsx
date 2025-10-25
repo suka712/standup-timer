@@ -16,8 +16,8 @@ type SoundKey = 'start' | 'over' | 'none';
 const Clock = ({ attendees, setAttendees, volumeLevel }: ClockProps) => {
   const audios = useRef({
     start: new Audio('/clock-interval-start.mp3'),
+    over: new Audio('/clock-interval-over.mp3'),
     none: new Audio('/clock-none.mp3'),
-    over: new Audio('/clock-interval-over.mp3'), // Correct
   });
   const playSound = (soundKey: SoundKey) => {
     audios.current[soundKey].volume = volumeLevel;
@@ -28,8 +28,6 @@ const Clock = ({ attendees, setAttendees, volumeLevel }: ClockProps) => {
   const [milisecondsLeft, setMilisecondsLeft] = useState(STARTING_MINUTE * 60 * 1000);
 
   const [standingAttendee, setStandingAttendee] = useState<string | undefined>();
-
-  // Handle setting volume level
 
   // Decrement miliseconds
   useEffect(() => {
