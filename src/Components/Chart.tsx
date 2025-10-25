@@ -18,7 +18,6 @@ const Chart = ({ attendees }: ChartProps) => {
         data: attendees.map((a) => a.interval),
         backgroundColor: '#646cff',
         borderRadius: 8,
-
         barPercentage: 0.8,
       },
     ],
@@ -27,11 +26,15 @@ const Chart = ({ attendees }: ChartProps) => {
   const options = {
     scales: {
       x: { display: false },
-      y: { display: false },
+      y: { 
+        display: false,
+        min: 0,
+        max: 8, // BREAK IF EXCEEDED
+      },
     },
     plugins: {
       legend: {
-        display: false, // hide the legend if not needed
+        display: false,
       },
       tooltip: {
         backgroundColor: '#222',
@@ -45,7 +48,7 @@ const Chart = ({ attendees }: ChartProps) => {
   };
 
   return (
-    <div style={{ width: 600 }}>
+    <div style={{ position: 'fixed', width: 650 }}>
       <Bar
         data={data}
         options={options}
