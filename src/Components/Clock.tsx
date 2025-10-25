@@ -1,4 +1,4 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 interface Attendee {
   name: string;
@@ -8,12 +8,20 @@ interface Attendee {
 interface ClockProps {
   attendees: Attendee[];
   setAttendees: React.Dispatch<React.SetStateAction<Attendee[]>>;
+  volumeLevel: number;
 }
 
-const Clock = ({ attendees, setAttendees }: ClockProps) => {
-  const intervalStart = new Audio('/interval-start.mp3');
-  const intervalOver = new Audio('/interval-over.mp3');
-  const intervalStop = new Audio('/interval-pause.mp3');
+type SoundKey = 'start' | 'over' | 'stop';
+
+const Clock = ({ attendees, setAttendees, volumeLevel }: ClockProps) => {
+  const audios = useRef({
+    start: new Audio('/interval-start.mp3'),
+    over: new Audio('/interval-over.mp3'),
+    stop: new Audio('/interval-pause.mp3'),
+  });
+  const playSound = (soundKey: SoundKey) => {
+    audios.current[soundKey].play();
+  };
 
   const STARTING_MINUTE = 4;
   const [milisecondsLeft, setMilisecondsLeft] = useState(STARTING_MINUTE * 60 * 1000);
@@ -37,10 +45,18 @@ const Clock = ({ attendees, setAttendees }: ClockProps) => {
       setAttendees((prev) =>
         prev.map((a) => (a.name === standingAttendee ? { name: a.name, interval: a.interval + 1 } : a))
       );
-      intervalOver.play();
-      setMilisecondsLeft(Math.floor((STARTING_MINUTE * 60 * 1000) / (attendees.find(a => a.name === standingAttendee)!.interval + 1)));
+      playSound('over');
+      setMilisecondsLeft(
+        Math.floor((STARTING_MINUTE * 60 * 1000) / (attendees.find((a) => a.name === standingAttendee)!.interval + 1))
+      );
     }
   });
+
+  useEffect(() => {
+    Object.values(audios.current).forEach((audio) => {
+      audio.volume = volumeLevel;
+    });
+  }, [volumeLevel]);
 
   const displayMinute = Math.floor(milisecondsLeft / 60000);
   const displaySecond = Math.floor((milisecondsLeft % 60000) / 1000);
@@ -58,17 +74,17 @@ const Clock = ({ attendees, setAttendees }: ClockProps) => {
           <button
             style={standingAttendee === undefined ? { border: '1px solid #747bff' } : {}}
             onClick={() => {
-              intervalStop.play();
+              playSound('stop');
               setStandingAttendee(undefined);
               setMilisecondsLeft(STARTING_MINUTE * 60 * 1000);
             }}
           ></button>
           {attendees.map((a) => (
             <button
-              style={a.name === standingAttendee ? { border: '1px solid #747bff'} : {}}
+              style={a.name === standingAttendee ? { border: '1px solid #747bff' } : {}}
               key={a.name}
               onClick={() => {
-                intervalStart.play();
+                playSound('start');
                 setStandingAttendee(a.name);
                 setMilisecondsLeft(Math.floor((STARTING_MINUTE * 60 * 1000) / a.interval));
               }}
@@ -80,6 +96,6 @@ const Clock = ({ attendees, setAttendees }: ClockProps) => {
       </div>
     </>
   );
-}
+};
 
 export default Clock;

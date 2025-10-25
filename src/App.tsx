@@ -2,6 +2,7 @@ import { useState } from 'react';
 import './App.css';
 import Clock from './Components/Clock';
 import Chart from './Components/Chart';
+import VolumeButton from './Components/VolumeButton';
 
 const App = () => {
   const [attendees, setAttendees] = useState([
@@ -11,9 +12,11 @@ const App = () => {
     { name: 'tienanh', interval: 1 },
     { name: 'rich', interval: 1 },
   ]);
+  
   return (
     <>
-      <Clock attendees={attendees} setAttendees={setAttendees} />
+      <VolumeButton />
+      <Clock attendees={attendees} setAttendees={setAttendees} volumeLevel={1}/>
       <Chart attendees={attendees} />
     </>
   );
