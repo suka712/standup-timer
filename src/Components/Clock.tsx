@@ -52,7 +52,7 @@ const Clock = ({ attendees, setAttendees, volumeLevel }: ClockProps) => {
         Math.floor((STARTING_MINUTE * 60 * 1000) / (attendees.find((a) => a.name === standingAttendee)!.interval + 1))
       );
     }
-  });
+  }, [milisecondsLeft]);
 
   useEffect(() => {
     Object.values(audios.current).forEach((audio) => {
