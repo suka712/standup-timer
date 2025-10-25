@@ -1,23 +1,24 @@
 import {useState, useEffect} from 'react';
 
-export const Clock = () => {
-  const [attendees, setAttendees] = useState([
-    { name: 'khiem', interval: 1 },
-    { name: 'khoa', interval: 1 },
-    { name: 'truc', interval: 1 },
-    { name: 'tienanh', interval: 1 },
-    { name: 'rich', interval: 1 },
-  ]);
+interface Attendee {
+  name: string;
+  interval: number;
+}
 
+interface ClockProps {
+  attendees: Attendee[];
+  setAttendees: React.Dispatch<React.SetStateAction<Attendee[]>>;
+}
+
+const Clock = ({ attendees, setAttendees }: ClockProps) => {
   const intervalStart = new Audio('/interval-start.mp3');
   const intervalOver = new Audio('/interval-over.mp3');
   const intervalStop = new Audio('/interval-pause.mp3');
 
-
   const STARTING_MINUTE = 4;
   const [milisecondsLeft, setMilisecondsLeft] = useState(STARTING_MINUTE * 60 * 1000);
 
-  const [standingAttendee, setStandingAttendee] = useState<string>();
+  const [standingAttendee, setStandingAttendee] = useState<string | undefined>();
 
   useEffect(() => {
     if (!standingAttendee) {
