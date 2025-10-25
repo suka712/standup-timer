@@ -13,8 +13,8 @@ const App = () => {
   ]);
   return (
     <>
-      <Clock attendees={attendees} setAttendees={setAttendees}/>
-      <Chart attendees={attendees}/>
+      <Clock attendees={attendees} setAttendees={setAttendees} />
+      <Chart attendees={attendees} />
     </>
   );
 };

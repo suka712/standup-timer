@@ -63,9 +63,9 @@ const Clock = ({ attendees, setAttendees }: ClockProps) => {
               setMilisecondsLeft(STARTING_MINUTE * 60 * 1000);
             }}
           ></button>
-          {[...attendees].map((a) => (
+          {attendees.map((a) => (
             <button
-              style={a.name === standingAttendee ? { border: '1px solid #747bff' } : {}}
+              style={a.name === standingAttendee ? { border: '1px solid #747bff'} : {}}
               key={a.name}
               onClick={() => {
                 intervalStart.play();

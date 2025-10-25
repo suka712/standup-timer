@@ -16,26 +16,48 @@ const Chart = ({ attendees }: ChartProps) => {
       {
         label: 'Intervals',
         data: attendees.map((a) => a.interval),
-        fill: false,
-        borderColor: 'rgb(75, 192, 192)',
-        tension: 1,
+        backgroundColor: '#646cff',
+        borderRadius: 8,
+
+        barPercentage: 0.8,
       },
     ],
   };
 
   const options = {
-    responsive: true,
+    scales: {
+      x: { display: false },
+      y: { display: false },
+    },
     plugins: {
       legend: {
-        position: 'top' as const,
+        display: false, // hide the legend if not needed
       },
-      title: {
-        display: true,
-        text: 'Chart.js Bar Chart',
+      tooltip: {
+        backgroundColor: '#222',
+        titleColor: '#fff',
+        bodyColor: '#ddd',
+        borderColor: '#646cff',
+        borderWidth: 1,
       },
     },
+    maintainAspectRatio: true,
   };
-  return <Bar data={data} options={options} />;
+
+  return (
+    <div style={{ width: 600 }}>
+      <Bar
+        data={data}
+        options={options}
+        style={{
+          position: 'fixed',
+          bottom: 0,
+          left: '50%',
+          transform: 'translateX(-50%)',
+        }}
+      />
+    </div>
+  );
 };
 
 export default Chart;
