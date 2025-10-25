@@ -9,6 +9,11 @@ export const Clock = () => {
     { name: 'rich', interval: 1 },
   ]);
 
+  const intervalStart = new Audio('/interval-start.mp3');
+  const intervalOver = new Audio('/interval-over.mp3');
+  const intervalStop = new Audio('/interval-pause.mp3');
+
+
   const STARTING_MINUTE = 4;
   const [milisecondsLeft, setMilisecondsLeft] = useState(STARTING_MINUTE * 60 * 1000);
 
@@ -31,7 +36,7 @@ export const Clock = () => {
       setAttendees((prev) =>
         prev.map((a) => (a.name === standingAttendee ? { name: a.name, interval: a.interval + 1 } : a))
       );
-      new Audio('/interval-over.mp3').play();
+      intervalOver.play();
       setMilisecondsLeft(Math.floor((STARTING_MINUTE * 60 * 1000) / (attendees.find(a => a.name === standingAttendee)!.interval + 1)));
     }
   });
@@ -52,7 +57,7 @@ export const Clock = () => {
           <button
             style={standingAttendee === undefined ? { border: '1px solid #747bff' } : {}}
             onClick={() => {
-              new Audio('/interval-pause.mp3').play();
+              intervalStop.play();
               setStandingAttendee(undefined);
               setMilisecondsLeft(STARTING_MINUTE * 60 * 1000);
             }}
@@ -62,7 +67,7 @@ export const Clock = () => {
               style={a.name === standingAttendee ? { border: '1px solid #747bff' } : {}}
               key={a.name}
               onClick={() => {
-                new Audio('/interval-start.mp3').play();
+                intervalStart.play();
                 setStandingAttendee(a.name);
                 setMilisecondsLeft(Math.floor((STARTING_MINUTE * 60 * 1000) / a.interval));
               }}
