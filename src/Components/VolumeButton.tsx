@@ -1,5 +1,3 @@
-import { useState } from "react"
-
 type VolumeButtonProps = {
   volumeLevel: number;
   setVolumeLevel: React.Dispatch<React.SetStateAction<number>>;
