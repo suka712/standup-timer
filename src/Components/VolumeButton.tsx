@@ -1,11 +1,17 @@
+import { useRef } from "react";
+
 type VolumeButtonProps = {
   volumeLevel: number;
   setVolumeLevel: React.Dispatch<React.SetStateAction<number>>;
 }
 
 const VolumeButton = ({volumeLevel, setVolumeLevel}: VolumeButtonProps) => {
+  const volumeAudio = useRef(new Audio('/volume-adjust.mp3'));
   const handleClick = () => {
     const newVolumeLevel = volumeLevel + 0.2 <= 1.1 ? volumeLevel + 0.2 : 0;
+    volumeAudio.current.volume = newVolumeLevel;
+    volumeAudio.current.currentTime = 0;
+    volumeAudio.current.play();
     console.log(newVolumeLevel);
     setVolumeLevel(newVolumeLevel);
   }
