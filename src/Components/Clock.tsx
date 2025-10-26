@@ -1,9 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-
-interface Attendee {
-  name: string;
-  interval: number;
-}
+import type { Attendee } from '../type/types';
 
 interface ClockProps {
   attendees: Attendee[];
@@ -51,13 +47,6 @@ const Clock = ({ attendees, setAttendees, volumeLevel }: ClockProps) => {
       );
     }
   }, [milisecondsLeft]);
-
-  useEffect(() => {
-    Object.values(audios.current).forEach((audio) => {
-      audio.currentTime = 0;
-      audio.volume = volumeLevel;
-    });
-  }, [volumeLevel]);
 
   const displayMinute = Math.floor(milisecondsLeft / 60000);
   const displaySecond = Math.floor((milisecondsLeft % 60000) / 1000);
