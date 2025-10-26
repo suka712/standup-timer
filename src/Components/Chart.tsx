@@ -9,7 +9,6 @@ type ChartProps = {
 };
 
 const Chart = ({ attendees }: ChartProps) => {
-  console.log(attendees);
   const data = {
     labels: attendees.map((a) => a.name),
     datasets: [
