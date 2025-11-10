@@ -20,7 +20,7 @@ const Clock = ({ attendees, setAttendees, volumeLevel }: ClockProps) => {
     audios.current[soundKey].play();
   };
 
-  const STARTING_MINUTE = 0.5;
+  const STARTING_MINUTE = 4;
   const [milisecondsLeft, setMilisecondsLeft] = useState(STARTING_MINUTE * 60 * 1000);
 
   const [standingAttendee, setStandingAttendee] = useState<string | undefined>();

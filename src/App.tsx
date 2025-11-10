@@ -11,6 +11,7 @@ const App = () => {
     { name: 'truc', interval: 1 },
     { name: 'tienanh', interval: 1 },
     { name: 'rich', interval: 1 },
+    { name: 'minhan', interval: 1 },
   ]);
   const [volumeLevel, setVolumeLevel] = useState(0.6);
   
